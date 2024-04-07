@@ -1,0 +1,137 @@
+#include <allegro.h>
+#include <stdio.h>
+#include <math.h>
+#define BUTTON_WIDTH 100
+#define BUTTON_HEIGHT 50
+#define GRID_WIDTH 20
+#define GRID_HEIGHT 12
+#define SCREEN_WIDTH (40 * GRID_WIDTH)
+#define SCREEN_HEIGHT (40 * GRID_HEIGHT)
+#define SPEED 6
+
+
+void lancerToutAllegro(int largeur, int hauteur);
+BITMAP *chargerImage(char *nomFichierImage);
+
+
+int main(int argc, char *argv[]){
+   /// DECLARATIONS DES VARIABLES DU MAIN
+   // Page pour l'assemblage de la sc�ne (invisible)
+   BITMAP *page;
+
+
+   // Graphismes charg�s depuis des fichiers .bmp
+   BITMAP *decor;
+   BITMAP *arbre;
+   BITMAP *maison;
+   BITMAP *soleil;
+
+
+   // Variables pour animer le soleil
+   int soleilx, soleily;       // Position effective du soleil
+   int soleilmx, soleilmy;     // Position moyenne du soleil
+   int soleilampx, soleilampy; // Amplitudes mouvement
+   int soleilcycle;            // Angle en degr�s...
+
+
+   /// INITIALISATION ALLEGRO et services
+   lancerToutAllegro(800,600);
+
+
+   /// AVANT BOUCLE JEU : initialisations et chargement des donn�es
+   // CREATION DU BUFFER D'AFFICHAGE � la taille de l'�cran
+   page=create_bitmap(SCREEN_W,SCREEN_H);
+   clear_bitmap(page);
+
+
+   // charger image de fond
+   decor=chargerImage("map.bmp");
+
+
+   // charger les images des "objets"
+   arbre=chargerImage(".menu");
+   maison=chargerImage("credits2");
+   soleil=chargerImage("settings2");
+
+
+   // Initialisation pour animation
+   // (positions/compteurs de d�part...)
+   soleilmx=50;
+   soleilmy=65;
+   soleilampx=0;
+   soleilampy=20;
+   soleilcycle=0;
+
+
+   /// BOUCLE JEU
+   while (!key[KEY_ESC])
+   {
+       /// Mise � jour des positions pour les objets anim�s
+       soleilx=soleilmx+soleilampx*cos(soleilcycle*M_PI/180);
+       soleily=soleilmy-soleilampy*sin(soleilcycle*M_PI/180);
+       soleilcycle=soleilcycle+10;
+       while (soleilcycle>=360)
+           soleilcycle=soleilcycle-360;
+
+
+       /// Assemblage de la sc�ne sur le BUFFER (invisible pour l'instant)
+       //  En posant le d�cor sur le buffer on �crase son ancien contenu
+       blit(decor,page,0,0,0,0,SCREEN_W,SCREEN_H);
+
+
+       //  On pose les diff�rents �l�ments, du plus �loign� au plus proche
+       //  ON RECONSTRUIT TOUT (m�me ce qui est rest� � la m�me place)
+       draw_sprite(page,soleil,soleilx,soleily);
+       draw_sprite(page,arbre,490,330);
+       draw_sprite(page,maison,450,350);
+       draw_sprite(page,arbre,150,370);
+       draw_sprite(page,arbre,330,400);
+
+
+
+
+       /// affichage du buffer � l'�cran (scene rendue visible)
+       blit(page,screen,0,0,0,0,SCREEN_W,SCREEN_H);
+       /// une pause pour temporiser l'encha�nement des images
+       rest(20);        // ( 20 ms -> � peu pr�s 50 images/s )
+   }
+
+
+   /// TERMINER LE PROGRAMME
+   //  Rien de sp�cial � faire ici pour l'instant
+   //  Les BITMAPs r�serv�es en m�moire avec create_bitmap ou load_bitmap
+   //  seront automatiquement lib�r�es en terminant le main.
+   return 0;
+}
+END_OF_MAIN();
+
+
+
+
+void lancerToutAllegro(int largeur, int hauteur) {
+   allegro_init();
+   install_keyboard();
+   install_mouse();
+   set_color_depth(
+           desktop_color_depth());                    // OUVERTURE MODE GRAPHIQUE (ouverture fenetre allegro)
+   if ((set_gfx_mode(GFX_AUTODETECT_WINDOWED, 800, 600, 0, 0)) != 0) {
+       allegro_message("Probleme mode graphique : %s", allegro_error);
+       allegro_exit();
+       exit(EXIT_FAILURE);
+   }
+   show_mouse(screen);                                 // Affiche pointeur de souris en mode allegro
+}
+
+
+BITMAP *chargerImage(char *nomFichierImage) {
+   BITMAP *bmp;
+   bmp = load_bitmap(nomFichierImage, NULL); // Charger l'image en utilisant seulement le nom du fichier
+   if (bmp == NULL) {
+       allegro_message("Pas pu trouver/charger %s", nomFichierImage);
+       allegro_exit();
+       exit(EXIT_FAILURE);
+   }
+   printf("Image chargée : %s\n", nomFichierImage);
+   return bmp;
+}
+
