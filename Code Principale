@@ -9,7 +9,7 @@
 #define SPEED 6
 
 // Structure pour représenter un bloc
-typedef struct {
+typedef struct {eee
     int x, y; // Coordonnées du bloc
     int width, height; // Largeur et hauteur du bloc
 } Block;
