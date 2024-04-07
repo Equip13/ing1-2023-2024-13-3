@@ -6,3 +6,5 @@ set(CMAKE_C_STANDARD 99)
 add_executable(tp2_allegro main.c)
 
 target_link_libraries(tp2_allegro -lmingw32 -lalleg44)
+
+nom du fichier en olsu
