@@ -1,0 +1,342 @@
+#include <allegro.h>
+// Initialisation des images
+#define BUTTON_WIDTH 100
+#define BUTTON_HEIGHT 50
+#define GRID_WIDTH 20
+#define GRID_HEIGHT 12
+#define SCREEN_WIDTH (40 * GRID_WIDTH)
+#define SCREEN_HEIGHT (40 * GRID_HEIGHT)
+#define SPEED 6
+
+typedef struct {
+    int x, y;
+    int width, height;
+} Block;
+
+int check_collision(Block block1, Block block2) {
+    return (block1.x + block1.width > block2.x &&
+            block1.x < block2.x + block2.width &&
+            block1.y + block1.height > block2.y &&
+            block1.y < block2.y + block2.height);
+}
+
+int main() {
+    Block static_green_block;
+    allegro_init();
+    install_keyboard();
+    int bloc_pris2 = 0;
+    int bloc_lache2 = 0;
+    Block mini_red_block2;
+    Block player2_block;
+    int x2 = 100, y2 = 100;
+    int velX2 = 0, velY2 = 0;
+
+    // Initialisation des variables pour player2
+    player2_block.width = 50;
+    player2_block.height = 50;
+    player2_block.x = 100;
+    player2_block.y = 100;
+
+    // Installation de la souris
+    install_mouse();
+    set_color_depth(32);
+    set_gfx_mode(GFX_AUTODETECT_WINDOWED, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0);
+    show_mouse(screen);
+
+    // Chargement des images
+    BITMAP *accueil = load_bitmap("136912-space-colorful-galaxy-stars-artwork-fantasy_art-digital_art-nebula-planet-TylerCreatesWorlds-space_art.bmp", NULL);
+    BITMAP *bouton_jouer = load_bitmap("148744.bmp", NULL);
+
+    if (!accueil || !bouton_jouer) {
+        allegro_message("Erreur de chargement des images.");
+        return -1;
+    }
+
+    // Configuration du bloc vert statique
+    static_green_block.width = 50;
+    static_green_block.height = 50;
+    static_green_block.x = SCREEN_WIDTH - static_green_block.width;
+    static_green_block.y = SCREEN_HEIGHT - static_green_block.height;
+
+    int bouton_x = (SCREEN_WIDTH - BUTTON_WIDTH) / 2;
+    int bouton_y = (SCREEN_HEIGHT - BUTTON_HEIGHT) / 2;
+
+    blit(accueil, screen, 0, 0, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    draw_sprite(screen, bouton_jouer, bouton_x, bouton_y);
+
+    while (!mouse_b) {
+        rest(10);
+    }
+
+    int x = 0, y = 0;
+    int velX = 0, velY = 0;
+    int done = 0;
+    int bloc_pris = 0;
+    int bloc_lache = 0;
+    int bloc_vert_pres = 0;
+    Block player_block;
+    Block static_red_block;
+    Block mini_red_block;
+    BITMAP *player_image, *background_image, *alternative_image;
+
+    player_image = load_bitmap("Capture d'écran 2024-03-28 094739.bmp", NULL);
+    if (!player_image) {
+        allegro_message("Erreur de chargement de l'image du joueur");
+        destroy_bitmap(accueil);
+        destroy_bitmap(bouton_jouer);
+        allegro_exit();
+        return -1;
+    }
+
+    background_image = load_bitmap("Capture d'écran 2024-03-28 100813.bmp", NULL);
+    if (!background_image) {
+        allegro_message("Erreur de chargement de l'image de fond");
+        destroy_bitmap(player_image);
+        destroy_bitmap(accueil);
+        destroy_bitmap(bouton_jouer);
+        allegro_exit();
+        return -1;
+    }
+
+    BITMAP *player2_image = load_bitmap("Capture d'écran 2024-03-29 114529.bmp", NULL);
+    if (!player2_image) {
+        allegro_message("Erreur de chargement de l'image de player2");
+        allegro_exit();
+        return -1;
+    }
+
+    player2_block.width = player2_image->w;
+    player2_block.height = player2_image->h;
+
+    alternative_image = load_bitmap("R - Copie.bmp", NULL);
+    if (!alternative_image) {
+        allegro_message("Erreur de chargement de l'image alternative");
+        destroy_bitmap(player_image);
+        destroy_bitmap(background_image);
+        destroy_bitmap(accueil);
+        destroy_bitmap(bouton_jouer);
+        allegro_exit();
+        return -1;
+    }
+
+    player_block.x = 0;
+    player_block.y = 0;
+    player_block.width = player_image->w;
+    player_block.height = player_image->h;
+
+    static_red_block.x = SCREEN_WIDTH - 50;
+    static_red_block.y = SCREEN_HEIGHT / 2;
+    static_red_block.width = 50;
+    static_red_block.height = 50;
+
+    while (!done) {
+        if (keypressed()) {
+            if (key[KEY_UP]) velY = -SPEED;
+            if (key[KEY_DOWN]) velY = SPEED;
+            if (key[KEY_LEFT]) velX = -SPEED;
+            if (key[KEY_RIGHT]) velX = SPEED;
+            if (key[KEY_ESC]) done = 1;
+
+            if (key[KEY_W]) velY2 = -SPEED;
+            if (key[KEY_S]) velY2 = SPEED;
+            if (key[KEY_A]) velX2 = -SPEED;
+            if (key[KEY_D]) velX2 = SPEED;
+            if (check_collision(player2_block, static_red_block)) {
+                if (velX2 > 0) x2 = static_red_block.x - player2_block.width;
+                else if (velX2 < 0) x2 = static_red_block.x + static_red_block.width;
+                if (velY2 > 0) y2 = static_red_block.y - player2_block.height;
+                else if (velY2 < 0) y2 = static_red_block.y + static_red_block.height;
+
+                // Si le joueur 2 est coincé, annuler le mouvement
+                velX2 = 0;
+                velY2 = 0;
+            }
+
+// Vérifier les collisions pour le joueur 2 avec le bloc vert
+            if (check_collision(player2_block, static_green_block)) {
+                if (velX2 > 0) x2 = static_green_block.x - player2_block.width;
+                else if (velX2 < 0) x2 = static_green_block.x + static_green_block.width;
+                if (velY2 > 0) y2 = static_green_block.y - player2_block.height;
+                else if (velY2 < 0) y2 = static_green_block.y + static_green_block.height;
+
+                // Si le joueur 2 est coincé, annuler le mouvement
+                velX2 = 0;
+                velY2 = 0;
+            }
+            if (key[KEY_T]) {
+                if (bloc_pris2) {
+                    // Lâcher le bloc
+                    bloc_pris2 = 0;
+                    bloc_lache2 = 1;
+                    // Positionner le bloc par terre
+                    mini_red_block2.x = player2_block.x + (player2_block.width - mini_red_block2.width) / 2;
+                    mini_red_block2.y = player2_block.y + player2_block.height;
+                } else if (!bloc_pris2 && check_collision(player2_block, mini_red_block2)) {
+                    // Ramasser le bloc si player2 est en collision avec lui
+                    bloc_pris2 = 1;
+                    bloc_lache2 = 0;
+                }
+            }
+            // Logique de capture et largage du bloc pour player
+            if (key[KEY_E] && !bloc_pris && !bloc_lache && check_collision(player_block, static_red_block)) {
+                bloc_pris = 1;
+                mini_red_block.x = player_block.x + (player_block.width / 2);
+                mini_red_block.y = player_block.y + (player_block.height / 2);
+                mini_red_block.width = 10;
+                mini_red_block.height = 10;
+            } else if (key[KEY_T] && bloc_pris) {
+                bloc_lache = 1;
+                bloc_pris = 0;
+            } else if (key[KEY_T] && bloc_lache && check_collision(player_block, mini_red_block)) {
+                bloc_lache = 0;
+                bloc_pris = 1;
+            }
+
+            // Logique de capture et largage du bloc pour player2
+            if (key[KEY_E] && !bloc_pris2 && !bloc_lache2 && check_collision(player2_block, static_red_block)) {
+                bloc_pris2 = 1;
+                mini_red_block2.x = player2_block.x + (player2_block.width / 2);
+                mini_red_block2.y = player2_block.y + (player2_block.height / 2);
+                mini_red_block2.width = 10;
+                mini_red_block2.height = 10;
+            } else if (key[KEY_T] && bloc_pris2) {
+                bloc_lache2 = 1;
+                bloc_pris2 = 0;
+            } else if (key[KEY_T] && bloc_lache2 && check_collision(player2_block, mini_red_block2)) {
+                bloc_lache2 = 0;
+                bloc_pris2 = 1;
+            }
+
+            if (key[KEY_G] && bloc_vert_pres && bloc_pris) {
+                mini_red_block.width = static_green_block.width;
+                mini_red_block.height = static_green_block.height;
+                rectfill(screen, mini_red_block.x, mini_red_block.y,
+                         mini_red_block.x + mini_red_block.width, mini_red_block.y + mini_red_block.height,
+                         makecol(0, 255, 0));
+            }
+            clear_keybuf();
+        }
+
+        // Mise à jour des positions
+        x += velX;
+        y += velY;
+        x2 += velX2;
+        y2 += velY2;
+
+        player2_block.x = x2;
+        player2_block.y = y2;
+
+        velX2 = 0;
+        velY2 = 0;
+
+        // Contrôle des limites pour player2
+        if (player2_block.x < 0) player2_block.x = 0;
+        if (player2_block.y < 0) player2_block.y = 0;
+        if (player2_block.x > SCREEN_WIDTH - player2_block.width) player2_block.x = SCREEN_WIDTH - player2_block.width;
+        if (player2_block.y > SCREEN_HEIGHT - player2_block.height) player2_block.y = SCREEN_HEIGHT - player2_block.height;
+
+        // Mettre à jour les positions de player2
+        x2 = player2_block.x;
+        y2 = player2_block.y;
+
+        player_block.x = x;
+        player_block.y = y;
+
+        if (x < 0) x = 0;
+        if (y < 0) y = 0;
+        if (x > SCREEN_WIDTH - player_block.width) x = SCREEN_WIDTH - player_block.width;
+        if (y > SCREEN_HEIGHT - player_block.height) y = SCREEN_HEIGHT - player_block.height;
+
+        if (check_collision(player_block, static_red_block)) {
+            if (velX > 0) x = static_red_block.x - player_block.width;
+            else if (velX < 0) x = static_red_block.x + static_red_block.width;
+            if (velY > 0) y = static_red_block.y - player_block.height;
+            else if (velY < 0) y = static_red_block.y + static_red_block.height;
+        }
+
+        if (bloc_pris2) {
+            mini_red_block2.x = player2_block.x + (player2_block.width - mini_red_block2.width) / 2;
+            mini_red_block2.y = player2_block.y - mini_red_block2.height;
+        }
+
+        if (check_collision(player_block, static_green_block)) {
+            if (velX > 0) x = static_green_block.x - player_block.width;
+            else if (velX < 0) x = static_green_block.x + static_green_block.width;
+            if (velY > 0) y = static_green_block.y - player_block.height;
+            else if (velY < 0) y = static_green_block.y + static_green_block.height;
+
+            bloc_vert_pres = 1;
+        } else {
+            bloc_vert_pres = 0;
+        }
+
+        velX = 0;
+        velY = 0;
+
+        // Lâcher ou ramasser le bloc par le joueur 2
+        if (key[KEY_T]) {
+            if (bloc_pris2) {
+                // Lâcher le bloc
+                bloc_pris2 = 0;
+                bloc_lache2 = 1;
+                // Positionner le bloc par terre
+                mini_red_block2.x = player2_block.x + (player2_block.width - mini_red_block2.width) / 2;
+                mini_red_block2.y = player2_block.y + player2_block.height;
+            } else if (!bloc_pris2 && check_collision(player2_block, mini_red_block2)) {
+                // Ramasser le bloc si player2 est en collision avec lui
+                bloc_pris2 = 1;
+                bloc_lache2 = 0;
+            }
+        }
+
+        // Mettre à jour la position du bloc mini rouge (pour le joueur 2) lorsqu'il est lâché
+        if (bloc_lache2) {
+            mini_red_block2.y = SCREEN_HEIGHT - mini_red_block2.height; // Positionner le bloc par terre
+        }
+
+        draw_sprite(screen, background_image, 0, 0);
+        draw_sprite(screen, player_image, x, y);
+        draw_sprite(screen, player2_image, x2, y2);
+
+        rectfill(screen, static_red_block.x, static_red_block.y,
+                 static_red_block.x + static_red_block.width, static_red_block.y + static_red_block.height,
+                 makecol(255, 0, 0));
+
+        rectfill(screen, static_green_block.x, static_green_block.y,
+                 static_green_block.x + static_green_block.width, static_green_block.y + static_green_block.height,
+                 makecol(0, 255, 0));
+
+        if (bloc_pris) {
+            mini_red_block.x = player_block.x + (player_block.width - mini_red_block.width) / 2;
+            mini_red_block.y = player_block.y + player_block.height;
+            rectfill(screen, mini_red_block.x, mini_red_block.y,
+                     mini_red_block.x + mini_red_block.width, mini_red_block.y + mini_red_block.height,
+                     makecol(255, 0, 0));
+        } else if (bloc_lache) {
+            rectfill(screen, mini_red_block.x, mini_red_block.y,
+                     mini_red_block.x + mini_red_block.width, mini_red_block.y + mini_red_block.height,
+                     makecol(255, 0, 0));
+        }
+
+        // Affichage du bloc pour player2 s'il est pris
+        if (bloc_pris2) {
+            mini_red_block2.x = player2_block.x + (player2_block.width - mini_red_block2.width) / 2;
+            mini_red_block2.y = player2_block.y + player2_block.height;
+            rectfill(screen, mini_red_block2.x, mini_red_block2.y,
+                     mini_red_block2.x + mini_red_block2.width, mini_red_block2.y + mini_red_block2.height,
+                     makecol(255, 0, 0));
+        }
+
+        rest(20);
+    }
+
+    draw_sprite(screen, player2_image, x2, y2);
+    destroy_bitmap(accueil);
+    destroy_bitmap(bouton_jouer);
+    destroy_bitmap(player_image);
+    destroy_bitmap(background_image);
+    destroy_bitmap(alternative_image);
+    allegro_exit();
+    return 0;
+}
+END_OF_MAIN()
