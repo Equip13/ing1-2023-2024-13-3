@@ -1,0 +1,72 @@
+#include "game.h"
+
+
+typedef struct {
+   int type; // Type de la case (0 = sol, 1 = mur, etc.)
+   // Ajouter d'autres informations si nécessaire
+} GridCell;
+
+
+// Structure représentant un niveau
+typedef struct {
+   int width;  // Largeur du niveau
+   int height; // Hauteur du niveau
+   GridCell **grid; // Grille du niveau
+} Level;
+
+
+// Fonction de chargement du niveau à partir d'un fichier
+void load_level(const char *filename) {
+   // Code de chargement du niveau à partir du fichier
+}
+
+
+// Fonction de création d'un nouveau niveau avec la largeur et la hauteur spécifiées
+void create_level(int width, int height) {
+   Level *newLevel = malloc(sizeof(Level));
+   if (newLevel == NULL) {
+       fprintf(stderr, "Erreur : Impossible d'allouer de la mémoire pour le niveau.\n");
+       exit(EXIT_FAILURE);
+   }
+
+
+   newLevel->width = width;
+   newLevel->height = height;
+
+
+   // Allocation dynamique de la grille 2D
+   newLevel->grid = malloc(height * sizeof(GridCell *));
+   if (newLevel->grid == NULL) {
+       fprintf(stderr, "Erreur : Impossible d'allouer de la mémoire pour la grille du niveau.\n");
+       exit(EXIT_FAILURE);
+   }
+
+
+   for (int i = 0; i < height; i++) {
+       newLevel->grid[i] = malloc(width * sizeof(GridCell));
+       if (newLevel->grid[i] == NULL) {
+           fprintf(stderr, "Erreur : Impossible d'allouer de la mémoire pour la grille du niveau.\n");
+           exit(EXIT_FAILURE);
+       }
+   }
+
+
+   // Initialisation de la grille avec des cases vides
+   for (int i = 0; i < height; i++) {
+       for (int j = 0; j < width; j++) {
+           newLevel->grid[i][j].type = 0; // Type 0 pour une case vide
+           // Initialiser d'autres informations si nécessaire
+       }
+   }
+
+
+   // Enregistrement du nouveau niveau
+   // Ici, tu peux stocker le niveau créé dans une variable globale pour y accéder plus tard
+}
+
+
+// Fonction de libération des ressources du niveau
+void cleanup_level() {
+   // Libération de la mémoire allouée pour le niveau
+   // Assure-toi de libérer chaque allocation dynamique réalisée dans create_level
+}
