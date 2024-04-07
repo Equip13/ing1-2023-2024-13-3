@@ -1,0 +1,15 @@
+#include "game.h"
+
+
+set_color_depth(32);
+set_gfx_mode(GFX_AUTODETECT_WINDOWED, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0);
+show_mouse(screen);
+
+
+blit(accueil, screen, 0, 0, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);    ///////C'EST QUOI SVP
+draw_sprite(screen, bouton_jouer, bouton_x, bouton_y);             ///////C'EST QUOI SVP
+
+
+while (!mouse_b) {    ///////C'EST QUOI SVP
+rest(10);
+}
