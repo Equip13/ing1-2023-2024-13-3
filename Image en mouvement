@@ -1,0 +1,16 @@
+Poster ici les différ// prise en compte effective de la zone cliquable EXIT :
+// clic gauche en haut � gauche de l'�cran -> fin du programme
+if ( mouse_b&1 && mouse_x<=40 && mouse_y<=20)
+   fin=1;
+
+
+// 1) EFFACER POSITION ACTUELLE (redessiner � la couleur du fond)
+rectfill(screen,posx,posy,posx+tx,posy+ty,makecol(0,0,0));
+
+
+// 2) AFFICHAGE NOUVELLE POSITION
+rectfill(screen,posx,posy,posx+tx,posy+ty,makecol(255,128,128));
+
+
+// 3) ON FAIT UNE PETITE PAUSE � chaque fois sinon �a va trop vite...
+rest(20);entes évolutions du code
