@@ -1,0 +1,144 @@
+// BUFFER d'affichage
+BITMAP *page;
+
+void lancerToutAllegro(int largeur, int hauteur)
+page=create_bitmap(SCREEN_W,SCREEN_H);
+clear_bitmap(page);
+}
+BITMAP *chargerImage(char *nomFichierImage){
+}
+
+.h
+extern BITMAP *page;
+void lancerToutAllegro(int largeur, int hauteur);
+BITMAP *chargerImage(char *nomFichierImage);
+
+
+
+
+
+
+
+
+
+// Tableau des images (BITMAPS) utilis�es par les objets
+BITMAP *tabImageObjet[NIMAGE_OBJET];
+
+
+// Chargement des images des objets
+void chargerTabImageObjet()
+{
+   tabImageObjet[0]=chargerImage("images/arbre.bmp");
+   tabImageObjet[1]=chargerImage("images/maison.bmp");
+   tabImageObjet[2]=chargerImage("images/soleil.bmp");
+}
+
+
+
+
+
+
+// CREATION DU BUFFER D'AFFICHAGE � la taille de l'�cran
+page=create_bitmap(SCREEN_W,SCREEN_H);
+clear_bitmap(page);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+a
+
+
+BITMAP *decor;
+BITMAP *arbre;
+BITMAP *maison;
+BITMAP *soleil;
+
+
+// charger image de fond
+decor=chargerImage("images/decor.bmp");
+// charger les images des "objets"
+arbre=chargerImage("images/arbre.bmp");
+maison=chargerImage("images/maison.bmp");
+soleil=chargerImage("images/soleil.bmp");
+
+
+ou
+
+
+    // charger les images des "objets"
+    arbre=load_bitmap("images/arbre.bmp",NULL);
+    maison=load_bitmap("images/maison.bmp",NULL);
+    soleil=load_bitmap("images/soleil.bmp",NULL);
+
+/// Assemblage de la sc�ne sur le BUFFER (invisible pour l'instant)
+//  En posant le d�cor sur le buffer on �crase son ancien contenu
+blit(decor,page,0,0,0,0,SCREEN_W,SCREEN_H);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+BITMAP *backgroundmenu = load_bitmap("quest.bmp", NULL);
+    if (!backgroundmenu) {
+        allegro_message("Erreur de chargement de l'image de fond");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    BITMAP *bouton_menu_jouer = load_bitmap(".bois.bmp", NULL);
+    if (!bouton_menu_jouer) {
+        allegro_message("Erreur de chargement de l'image du bouton menu Jouer");
+        destroy_bitmap(backgroundmenu);
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    int bouton_x = (SCREEN_WIDTH - bouton_menu_jouer->w) / 2;        // Calcul des positions pour centrer le bouton "Jouer"
+    int bouton_y = (SCREEN_HEIGHT - bouton_menu_jouer->h) / 2;
+
+    // Dessin du fond
+    blit(backgroundmenu, screen, 0, 0, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    // Dessin du bouton "Jouer"
+    draw_sprite(screen, bouton_menu_jouer, bouton_x, bouton_y);
+    // Libération de la mémoire des images chargées
+    destroy_bitmap(backgroundmenu);
+    destroy_bitmap(bouton_menu_jouer);
+}
