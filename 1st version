@@ -1,5 +1,5 @@
 #include <allegro.h>
-
+// Initialisation des images
 #define BUTTON_WIDTH 100
 #define BUTTON_HEIGHT 50
 #define GRID_WIDTH 20
