@@ -8,3 +8,4 @@ add_executable(tp2_allegro main.c)
 target_link_libraries(tp2_allegro -lmingw32 -lalleg44)
 
 nom du fichier en olsu
+//Je modfie juste pour la peda mdrrr
