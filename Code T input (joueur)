@@ -1,0 +1,84 @@
+#include "game.h"
+
+void input() {
+    while (!done) {
+        if (keypressed()) {
+            if (key[KEY_Z]) player1.y += PLAYER_SPEED;
+            if (key[KEY_S]) player1.y -= PLAYER_SPEED;
+            if (key[KEY_A]) player1.x -= PLAYER_SPEED;
+            if (key[KEY_D]) player1.x += PLAYER_SPEED;
+
+            if (key[KEY_I]) player2.y += PLAYER_SPEED;
+            if (key[KEY_J]) player2.y -= PLAYER_SPEED;
+            if (key[KEY_K]) player2.x -= PLAYER_SPEED;
+            if (key[KEY_L]) player2.x += PLAYER_SPEED;
+            if (key[KEY_UP]) player2.y += PLAYER_SPEED;
+            if (key[KEY_DOWN]) player2.y -= PLAYER_SPEED;
+            if (key[KEY_LEFT]) player2.x -= PLAYER_SPEED;
+            if (key[KEY_RIGHT]) player2.x += PLAYER_SPEED;
+            if (key[KEY_ESC]) done = 1;                         ///////C'EST QUOI SVP
+
+            if (player1.x < GRID_SIZE) player1.x = GRID_SIZE;
+            if (player1.x >= SCREEN_WIDTH - GRID_SIZE - PLAYER_SIZE) player1.x = SCREEN_WIDTH - GRID_SIZE - PLAYER_SIZE;
+            if (player1.y < GRID_SIZE) player1.y = GRID_SIZE;
+            if (player1.y >= SCREEN_HEIGHT - GRID_SIZE - PLAYER_SIZE) player1.y = SCREEN_HEIGHT - GRID_SIZE - PLAYER_SIZE;
+
+            if (player2.x < GRID_SIZE) player2.x = GRID_SIZE;
+            if (player2.x >= SCREEN_WIDTH - GRID_SIZE - PLAYER_SIZE) player2.x = SCREEN_WIDTH - GRID_SIZE - PLAYER_SIZE;
+            if (player2.y < GRID_SIZE) player2.y = GRID_SIZE;
+            if (player2.y >= SCREEN_HEIGHT - GRID_SIZE - PLAYER_SIZE) player2.y = SCREEN_HEIGHT - GRID_SIZE - PLAYER_SIZE;
+
+            player1.x = 0;                                      // Si le joueur 1 & 2 est coincé, annuler le mouvement
+            player1.y = 0;
+            player2.x = 0;
+            player2.y = 0;
+        }
+    }
+}
+
+void update_player_catch_interactions() {                                               // Fonction pour mettre à jour les interactions du joueur avec les blocs
+    if (key[KEY_C]) {
+        for (int i = 0; i < numBlocks; i++) {                                           // Parcourir tous les blocs
+            if (check_collision(player1, blocks[i]) && !blocks[i].isCarried && blocks[i].color == makecol(0, 255, 0)) {          // Vérifier si le joueur est en collision avec le bloc et si le bloc n'est pas déjà porté par un joueur
+                blocks[i].isCarried = 1;                                                // Marquer le bloc comme porté par le joueur
+                player1.hasBlock = 1;                                                   // Marquer que le joueur porte un bloc
+                player1.blockIndex = i;                                                 // Stocker l'indice du bloc que le joueur tient
+
+                blocks[i].x = player1.x + (player1.width / 2) - (blocks[i].width / 2);  // Positionner le bloc vert sur le joueur
+                blocks[i].y = player1.y + (player1.height / 2) - (blocks[i].height / 2);
+
+
+            } else if (check_collision(player1, blocks[i]) && blocks[i].isCarried) {
+                blocks[i].isCarried = 0;                                                // Si le joueur est en collision avec un bloc qu'il porte déjà, lâcher le bloc
+                player1.hasBlock = 0;                                                   // Le joueur lâche le bloc s'il en porte déjà un
+                player1.blockIndex = -1;                                                // Réinitialiser l'indice du bloc que le joueur tient
+
+                blocks[i].x = player1.x + (player1.width / 2) - (blocks[i].width / 2);  // Positionner le bloc vert par terre
+                blocks[i].y = player1.y + player1.height;
+                break;                                                                  // Sortir de la boucle
+            }
+        }
+    }
+    if (key[KEY_M]) {
+        for (int i = 0; i < numBlocks; i++) {                                           // Parcourir tous les blocs
+            if (check_collision(player2, blocks[i]) && !blocks[i].isCarried && blocks[i].color == makecol(0, 255, 0)) {          // Vérifier si le joueur est en collision avec le bloc et si le bloc n'est pas déjà porté par un joueur
+                blocks[i].isCarried = 1;                                                // Marquer le bloc comme porté par le joueur
+                player2.hasBlock = 1;                                                   // Marquer que le joueur porte un bloc
+                player2.blockIndex = i;                                                 // Stocker l'indice du bloc que le joueur tient
+
+                blocks[i].x = player2.x + (player2.width / 2) - (blocks[i].width / 2);  // Positionner le bloc vert sur le joueur
+                blocks[i].y = player2.y + (player2.height / 2) - (blocks[i].height / 2);
+
+
+            } else if (check_collision(player2, blocks[i]) && blocks[i].isCarried) {
+                blocks[i].isCarried = 0;                                                // Si le joueur est en collision avec un bloc qu'il porte déjà, lâcher le bloc
+                player2.hasBlock = 0;                                                   // Le joueur lâche le bloc s'il en porte déjà un
+                player2.blockIndex = -1;                                                // Réinitialiser l'indice du bloc que le joueur tient
+
+                blocks[i].x = player2.x + (player2.width / 2) - (blocks[i].width / 2);  // Positionner le bloc vert par terre
+                blocks[i].y = player2.y + player2.height;
+                break;                                                                  // Sortir de la boucle
+            }
+        }
+    }
+}
