@@ -1,0 +1,16 @@
+- player2.width)
+        player2.x = SCREEN_WIDTH - player2.width;
+    if (player2.y > SCREEN_HEIGHT - player2.height)
+        player2.y = SCREEN_HEIGHT - player2.height;
+
+    for (int i = 0; i < numBlocks; i++) {                   // Contrôle des limites pour les blocs
+        if (blocks[i].x < 0) blocks[i].x = 0;
+        if (blocks[i].y < 0) blocks[i].y = 0;
+
+        if (blocks[i].x > SCREEN_WIDTH - blocks[i].width)
+            blocks[i].x = SCREEN_WIDTH - blocks[i].width;
+        if (blocks[i].y > SCREEN_HEIGHT - blocks[i].height)
+            blocks[i].y = SCREEN_HEIGHT - blocks[i].height;
+    }
+}
+
