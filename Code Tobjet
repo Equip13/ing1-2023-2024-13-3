@@ -1,0 +1,18 @@
+#include "game.h"
+
+void add_block(int x, int y, int width, int height, int color) {               // Fonction pour ajouter un bloc au jeu
+    if (numBlocks < MAX_BLOCKS) {
+        blocks[numBlocks].x = x;
+        blocks[numBlocks].y = y;
+        blocks[numBlocks].width = width;
+        blocks[numBlocks].height = height;
+        blocks[numBlocks].color = color;
+        blocks[numBlocks].isCarried = 0;                            // Initialiser le bloc comme non porté par un joueur
+        numBlocks++;
+    }
+}
+
+void initialize_blocks() {
+    add_block(100, 100, 30, 30, makecol(255, 0, 0));        // Ajoute un bloc ROUGE
+    add_block(150, 150, 30, 30, makecol(0, 255, 0));        // Ajoute un bloc VERT
+    add_block(200, 200, 40, 40, makecol(0, 0, 255));        // Ajoute un bloc BLEU
