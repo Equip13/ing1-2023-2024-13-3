@@ -1,0 +1,127 @@
+#include "graphic.h"
+
+void lancerToutAllegro(int largeur, int hauteur){
+    allegro_init();
+    install_keyboard();
+    install_mouse();
+
+    set_color_depth(32);
+    set_gfx_mode(GFX_AUTODETECT_WINDOWED,800,600,0,0);
+    show_mouse(screen);                                                 // Affiche pointeur de souris en mode allegro
+
+    page0_Start=create_bitmap(SCREEN_WIDTH,SCREEN_HEIGHT);       // Page 0 Start
+    clear_bitmap(page0_Start);
+    page1_Menu=create_bitmap(SCREEN_WIDTH,SCREEN_HEIGHT);        // Page 1 Menu
+    clear_bitmap(page1_Menu);
+    page1_Levels=create_bitmap(SCREEN_WIDTH,SCREEN_HEIGHT);      // Page 1 Levels
+    clear_bitmap(page1_Levels);
+    page1_Credits=create_bitmap(SCREEN_WIDTH,SCREEN_HEIGHT);     // Page 1 Credits
+    clear_bitmap(page1_Credits);
+    page1_Settings=create_bitmap(SCREEN_WIDTH,SCREEN_HEIGHT);    //Page 1 Settings
+    clear_bitmap(page1_Settings);
+    rest(20);
+}
+
+void graphic_start() {
+    Background_Start = load_bitmap("C:\\.INFORMATIQUE\\Projet Info ECECooked\\Projet Version Petit a Petit 03-24\\Projet Info Graphisme Paint\\Background_Start.bmp", NULL);
+    if (!Background_Levels) {
+        allegro_message("Erreur de chargement de Background_Start");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+    blit(Background_Start,page0_Start,0,0,0,0,SCREEN_WIDTH, SCREEN_HEIGHT);
+    blit(page0_Start,screen,0,0,0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+    rest(20);
+}
+
+void graphic_menu() {
+    Background_Menu = load_bitmap("C:\\.INFORMATIQUE\\Projet Info ECECooked\\Projet Version Petit a Petit 03-24\\Projet Info Graphisme Paint\\Background_Menu.bmp", NULL);
+    if (!Background_Menu) {
+        allegro_message("Erreur de chargement de Background_Menu");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+    blit(Background_Menu,page1_Menu,0,0,0,0,SCREEN_WIDTH, SCREEN_HEIGHT);
+    blit(page1_Menu,screen,0,0,0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+    rest(20);
+}
+
+void graphic_levels() {
+    Background_Levels = load_bitmap("C:\\.INFORMATIQUE\\Projet Info ECECooked\\Projet Version Petit a Petit 03-24\\Projet Info Graphisme Paint\\Background_Levels.bmp", NULL);
+    if (!Background_Levels) {
+        allegro_message("Erreur de chargement de Background_Levels");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+    blit(Background_Levels,page1_Levels,0,0,0,0,SCREEN_WIDTH, SCREEN_HEIGHT);
+    blit(page1_Levels,screen,0,0,0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+    rest(20);
+}
+
+void graphic_credits() {
+    Background_Credits = load_bitmap("C:\\.INFORMATIQUE\\Projet Info ECECooked\\Projet Version Petit a Petit 03-24\\Projet Info Graphisme Paint\\Background_Credits.bmp", NULL);
+    if (!Background_Credits) {
+        allegro_message("Erreur de chargement de Background_Credits");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+    blit(Background_Credits,page1_Credits,0,0,0,0,SCREEN_WIDTH, SCREEN_HEIGHT);
+    blit(page1_Credits,screen,0,0,0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+    rest(20);
+}
+
+void graphic_settings() {
+    Background_Settings = load_bitmap("C:\\.INFORMATIQUE\\Projet Info ECECooked\\Projet Version Petit a Petit 03-24\\Projet Info Graphisme Paint\\Background_Settings.bmp", NULL);
+    if (!Background_Settings) {
+        allegro_message("Erreur de chargement de Background_Settings");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+    blit(Background_Settings,page1_Settings,0,0,0,0,SCREEN_WIDTH, SCREEN_HEIGHT);
+    blit(page1_Settings,screen,0,0,0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+    rest(20);
+}
+
+void graphic_player_skin() {                                  // Fonction de dessin de la scène du jeu : personnages, objets, décors, etc.
+    Player1_Skin = load_bitmap("C:\\.INFORMATIQUE\\Projet Info ECECooked\\Projet Version Petit a Petit 03-24\\Projet Info Graphisme Paint\\Player1_Skin.bmp", NULL);
+    if (!Player1_Skin) {
+        allegro_message("Erreur de chargement de l'image Player1_Skin");
+        destroy_bitmap(page1_Menu);              // Détruire toute la page page1_Menu
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    Player2_Skin = load_bitmap("C:\\.INFORMATIQUE\\Projet Info ECECooked\\Projet Version Petit a Petit 03-24\\Projet Info Graphisme Paint\\Player2_Skin.bmp", NULL);
+    if (!Player2_Skin) {
+        allegro_message("Erreur de chargement de l'image Player1_Skin");
+        destroy_bitmap(page1_Menu);              // Détruire toute la page page1_Menu
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+}
+
+void draw_game_scene() {                        // Fonction de chargement des images, des sprites, des polices, etc / Ressources Graphiques.
+
+    fond=load_bitmap("images/decor.bmp",NULL);
+
+    arbre=load_bitmap("images/arbre.bmp",NULL);
+    maison=load_bitmap("images/maison.bmp",NULL);
+    soleil=load_bitmap("images/soleil.bmp",NULL);
+
+    blit(fond,page,0,0,0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+
+    draw_sprite(page,arbre,490,330);            //On met aussi les élement qui bouge pas
+    draw_sprite(page,maison,450,350);
+    draw_sprite(page,arbre,150,370);
+    draw_sprite(page,arbre,330,400);
+
+    /// affichage du buffer   l' cran (scene rendue visible)
+    blit(page,screen,0,0,0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+    rest(20);
+}
+
+void cleanup_graphics() {                       // Fonction de nettoyage des ressources graphiques / Libération de la mémoire
+    destroy_bitmap(Background_Menu);
+    destroy_bitmap(Player1_Skin);
+    destroy_bitmap(Player2_Skin);
+}
