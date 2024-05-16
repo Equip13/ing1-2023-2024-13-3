@@ -1,0 +1,35 @@
+
+#define PLAYER_SIZE 25
+#define PLAYER_SPEED 4
+
+extern BITMAP *Background_Start;
+extern BITMAP *Background_Menu;
+extern BITMAP *Background_Levels;
+extern BITMAP *Background_Credits;
+extern BITMAP *Background_Settings;
+extern BITMAP *Player1_Skin;
+extern BITMAP *Player2_Skin;
+
+extern BITMAP *page0_Start;
+extern BITMAP *page1_Menu;
+extern BITMAP *page1_Levels;
+extern BITMAP *page1_Credits;
+extern BITMAP *page1_Settings;
+
+extern BITMAP *fond;
+extern BITMAP *arbre;
+extern BITMAP *maison;
+extern BITMAP *soleil;
+extern BITMAP *page;
+
+void lancerToutAllegro(int largeur, int hauteur);
+void graphic_start();
+void graphic_menu();
+void graphic_levels();
+void graphic_credits();
+void graphic_settings();
+void graphic_player_skin();
+void draw_game_scene();
+void cleanup_graphics();
+
+#endif //PROJET_VERSION_PETIT_A_PETIT_GRAPHIC_H
