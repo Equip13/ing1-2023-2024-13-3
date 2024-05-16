@@ -1,0 +1,83 @@
+#ifndef PROJET_VERSION_PETIT_A_PETIT_GAME_H
+#define PROJET_VERSION_PETIT_A_PETIT_GAME_H
+
+#include <allegro.h>
+#include "graphic.h"
+
+#define GRID_WIDTH 20
+#define GRID_HEIGHT 12
+#define GRID_SIZE 40
+#define SCREEN_WIDTH 800
+#define SCREEN_HEIGHT 600
+#define PLAYER_SIZE 25
+#define PLAYER_SPEED 4
+
+/////   STRUCTURE   //////
+
+typedef struct {
+    int x, y;
+    int width, height;
+    int hasBlock;
+    int blockIndex;
+} Player;
+
+extern Player player1;
+extern Player player2;
+
+typedef struct {
+    int x, y;
+    int width, height;
+    int isCarried;
+    int color;
+} Block;
+
+extern Block blocks[];
+extern int numBlocks;
+
+extern int done;
+
+int choixPause;
+/////   OPTION PRINCIPALE   //////
+
+//Main
+void initialize_game();
+void game_loop();
+void cleanup();
+
+//Menu
+///// A METTRE EN ALLEGRO APRES /////
+int menu();
+
+//Input
+void input();
+void update_player_catch_interactions();
+
+//Collision
+void check_border();
+
+//Objet
+#define MAX_BLOCKS 50                                               // Nombre maximum de blocs dans le jeu
+Block blocks[MAX_BLOCKS];
+int numBlocks = 0;
+void add_block(int x, int y, int width, int height, int color);
+void initialize_blocks();
+int check_collision(Player player, Block block);                    //////////////////////////////////   A vérifier si c'est bien bon je suis pas sur : input.c | ligne 42
+
+//Level1
+//void load_level(const char *filename);
+//void create_level(int width, int height);
+//void cleanup_level();
+///////RAJOUTER UNE ZONE TUTO ???/////
+
+/////   OPTION SUPPLÉMENTAIRE   //////
+
+//Mot de Passe
+//int determinerNiveauMotDePasse(char motDePasse[]);
+//int mdp(struct Level n);
+
+//Score
+//int calculate_personal_score();
+//int calculate_common_score();
+//void update_leaderboard();
+
+#endif //PROJET_VERSION_PETIT_A_PETIT_GAME_H
