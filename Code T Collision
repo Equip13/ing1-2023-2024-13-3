@@ -1,19 +1,29 @@
 #include "game.h"
 
-void add_block(int x, int y, int width, int height, int color) {               // Fonction pour ajouter un bloc au jeu
-    if (numBlocks < MAX_BLOCKS) {
-        blocks[numBlocks].x = x;
-        blocks[numBlocks].y = y;
-        blocks[numBlocks].width = width;
-        blocks[numBlocks].height = height;
-        blocks[numBlocks].color = color;
-        blocks[numBlocks].isCarried = 0;                            // Initialiser le bloc comme non porté par un joueur
-        numBlocks++;
-    }
-}
+void check_border() {
+    if (player1.x < 0) player1.x = 0;                       // Contrôle des limites écran pour player1
+    if (player1.y < 0) player1.y = 0;
 
-void initialize_blocks() {
-    add_block(100, 100, 30, 30, makecol(255, 0, 0));        // Ajoute un bloc ROUGE
-    add_block(150, 150, 30, 30, makecol(0, 255, 0));        // Ajoute un bloc VERT
-    add_block(200, 200, 40, 40, makecol(0, 0, 255));        // Ajoute un bloc BLEU
+    if (player1.x > SCREEN_WIDTH - player1.width)
+        player1.x = SCREEN_WIDTH - player1.width;
+    if (player1.y > SCREEN_HEIGHT - player1.height)
+        player1.y = SCREEN_HEIGHT - player1.height;
+
+    if (player2.x < 0) player2.x = 0;                       // Contrôle des limites écran pour player2
+    if (player2.y < 0) player2.y = 0;
+
+    if (player2.x > SCREEN_WIDTH - player2.width)
+        player2.x = SCREEN_WIDTH - player2.width;
+    if (player2.y > SCREEN_HEIGHT - player2.height)
+        player2.y = SCREEN_HEIGHT - player2.height;
+
+    for (int i = 0; i < numBlocks; i++) {                   // Contrôle des limites pour les blocs
+        if (blocks[i].x < 0) blocks[i].x = 0;
+        if (blocks[i].y < 0) blocks[i].y = 0;
+
+        if (blocks[i].x > SCREEN_WIDTH - blocks[i].width)
+            blocks[i].x = SCREEN_WIDTH - blocks[i].width;
+        if (blocks[i].y > SCREEN_HEIGHT - blocks[i].height)
+            blocks[i].y = SCREEN_HEIGHT - blocks[i].height;
+    }
 }
