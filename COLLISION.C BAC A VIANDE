@@ -1,0 +1,53 @@
+#include "game.h"
+
+void handle_collisions() {
+    for (int i = 0; i < num_zones_interdites; i++) {
+        Zone_Interdite zone = zones_interdites[i];
+
+        // Vérification des collisions avec les zones interdites
+        if (player1.x1 + player1.width1 > zone.x && player1.x1 < zone.x + zone.width &&
+            player1.y1 + player1.height1 > zone.y && player1.y1 < zone.y + zone.height) {
+            if (player1.dx1 > 0) {
+                player1.x1 = zone.x - player1.width1;
+            } else {
+                player1.x1 = zone.x + zone.width;
+            }
+        }
+
+        // Vérification des collisions avec les zones interdites en y
+        if (player1.y1 + player1.height1 > zone.y && player1.y1 < zone.y + zone.height &&
+            player1.x1 + player1.width1 > zone.x && player1.x1 < zone.x + zone.width) {
+            if (player1.dy1 > 0) {
+                player1.y1 = zone.y - player1.height1;
+            } else {
+                player1.y1 = zone.y + zone.height;
+            }
+        }
+    }
+
+    // Gestion de la collision avec player2
+    if (player1.x1 + player1.width1 > player2.x2 && player1.x1 < player2.x2 + player2.width2 &&
+        player1.y1 + player1.height1 > player2.y2 && player1.y1 < player2.y2 + player2.height2) {
+        if (player1.dx1 > 0) {
+            player1.x1 = player2.x2 - player1.width1;
+        } else {
+            player1.x1 = player2.x2 + player2.width2;
+        }
+
+        if (player1.dy1 > 0) {
+            player1.y1 = player2.y2 - player1.height1;
+        } else {
+            player1.y1 = player2.y2 + player2.height2;
+        }
+    }
+
+    // Vérification des collisions avec le bac à viande
+    if (player1.x1 + player1.width1 > BAC_X - BAC_COLLISION_MARGIN && player1.x1 < BAC_X + BAC_WIDTH + BAC_COLLISION_MARGIN &&
+                                                                                   player1.y1 + player1.height1 > BAC_Y - BAC_COLLISION_TOP_MARGIN && player1.y1 < BAC_Y + BAC_HEIGHT + BAC_COLLISION_MARGIN) {
+        // Ajuster la position du joueur en fonction de la direction de déplacement
+        if (player1.dx1 > 0) player1.x1 = BAC_X - player1.width1 - BAC_COLLISION_MARGIN;
+        if (player1.dx1 < 0) player1.x1 = BAC_X + BAC_WIDTH + BAC_COLLISION_MARGIN;
+        if (player1.dy1 > 0) player1.y1 = BAC_Y - player1.height1 - BAC_COLLISION_MARGIN;
+        if (player1.dy1 < 0) player1.y1 = BAC_Y + BAC_HEIGHT + BAC_COLLISION_TOP_MARGIN;
+    }
+}
