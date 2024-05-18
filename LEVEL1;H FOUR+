@@ -1,0 +1,136 @@
+#include "game.h"
+
+Meat meat[MAX_MEAT];  // Tableau de morceaux de viande
+int meatCarried = 0;
+int meatDropped = 0;
+int currentMeatIndex = -1; // Index du morceau de viande actuellement porté
+
+void update_player_position(Player1 *player) {
+    player->x1 += player->dx1;
+    player->y1 += player->dy1;
+
+    // Vérifier les limites de l'écran
+    if (player->x1 < 0) player->x1 = 0;
+    if (player->x1 > SCREEN_WIDTH - PLAYER_WIDTH) player->x1 = SCREEN_WIDTH - PLAYER_WIDTH;
+    if (player->y1 < 0) player->y1 = 0;
+    if (player->y1 > SCREEN_HEIGHT - PLAYER_HEIGHT) player->y1 = SCREEN_HEIGHT - PLAYER_HEIGHT;
+
+    // Si le joueur porte la viande, mettre à jour sa position
+    if (meatCarried && currentMeatIndex >= 0) {
+        meat[currentMeatIndex].x = player->x1 + player->width1;
+        meat[currentMeatIndex].y = player->y1;
+    }
+}
+
+void draw_game_level1_scene() {
+    graphic_board_fond();
+    graphic_player1_skin();
+    graphic_meat_piece(); // Charger l'image du morceau de viande
+    graphic_bac_a_viande(); // Charger l'image du bac à viande
+    graphic_oven_piece(); // Charger l'image du four
+    graphic_cooked_meat_piece(); // Charger l'image de la viande cuite
+    initialize_Zone_Interdites_level1();
+    initialize_blocks();
+
+    // Initialiser les morceaux de viande
+    for (int i = 0; i < MAX_MEAT; i++) {
+        meat[i].x = 0;
+        meat[i].y = 0;
+        meat[i].width = 20;
+        meat[i].height = 20;
+        meat[i].isCarried = 0;
+        meat[i].isDropped = 0;
+        meat[i].isCooked = 0;  // Initialiser la viande comme non cuite
+    }
+
+    while (!key[KEY_ESC]) {
+        // Gestion des entrées utilisateur
+        if (key[KEY_UP]) {
+            player1.dy1 = -PLAYER_SPEED;
+        } else if (key[KEY_DOWN]) {
+            player1.dy1 = PLAYER_SPEED;
+        } else {
+            player1.dy1 = 0;
+        }
+
+        if (key[KEY_LEFT]) {
+            player1.dx1 = -PLAYER_SPEED;
+        } else if (key[KEY_RIGHT]) {
+            player1.dx1 = PLAYER_SPEED;
+        } else {
+            player1.dx1 = 0;
+        }
+
+        // Interaction avec le bac à viande
+        if (key[KEY_E] && !meatCarried) {
+            if (player1.x1 + player1.width1 > BAC_X - BAC_COLLISION_MARGIN && player1.x1 < BAC_X + BAC_WIDTH + BAC_COLLISION_MARGIN &&
+                                                                                           player1.y1 + player1.height1 > BAC_Y - BAC_COLLISION_TOP_MARGIN && player1.y1 < BAC_Y + BAC_HEIGHT + BAC_COLLISION_MARGIN) {
+                // Trouver un morceau de viande disponible
+                for (int i = 0; i < MAX_MEAT; i++) {
+                    if (!meat[i].isCarried && !meat[i].isDropped) {
+                        meatCarried = 1;
+                        meat[i].isCarried = 1;
+                        currentMeatIndex = i;
+                        break;
+                    }
+                }
+            }
+        } else if (key[KEY_T] && meatCarried && currentMeatIndex >= 0) {
+            meatCarried = 0;
+            meat[currentMeatIndex].isCarried = 0;
+            meat[currentMeatIndex].isDropped = 1;
+            meat[currentMeatIndex].x = player1.x1;
+            meat[currentMeatIndex].y = player1.y1 + player1.height1;
+            currentMeatIndex = -1;
+        } else if (key[KEY_T] && !meatCarried) {
+            // Vérification de la proximité du joueur avec un morceau de viande au sol
+            for (int i = 0; i < MAX_MEAT; i++) {
+                if (meat[i].isDropped &&
+                    player1.x1 + player1.width1 > meat[i].x - 10 && player1.x1 < meat[i].x + meat[i].width + 10 &&
+                    player1.y1 + player1.height1 > meat[i].y - 10 && player1.y1 < meat[i].y + meat[i].height + 10) {
+                    meatCarried = 1;
+                    meat[i].isCarried = 1;
+                    meat[i].isDropped = 0;
+                    currentMeatIndex = i;
+                    break;
+                }
+            }
+        } else if (key[KEY_E] && meatCarried && currentMeatIndex >= 0) {
+            // Vérifier si le joueur est à côté du four pour cuire la viande
+            if (player1.x1 + player1.width1 > OVEN_X - BAC_COLLISION_MARGIN && player1.x1 < OVEN_X + OVEN_WIDTH + BAC_COLLISION_MARGIN &&
+                                                                                            player1.y1 + player1.height1 > OVEN_Y - BAC_COLLISION_MARGIN && player1.y1 < OVEN_Y + OVEN_HEIGHT + BAC_COLLISION_MARGIN) {
+                meat[currentMeatIndex].isCooked = 1;
+            }
+        }
+
+        // Mise à jour de la position du joueur
+        update_player_position(&player1);
+
+        // Vérification des collisions et ajustement des positions
+        handle_collisions();
+
+        // Dessiner le fond et les sprites
+        blit(Board_fond, page2_Level1, 0, 0, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        draw_sprite(page2_Level1, Player1_Skin, player1.x1, player1.y1);
+
+        // Dessiner le bac à viande en bas à droite du plateau
+        draw_sprite(page2_Level1, Bac_A_Viande, BAC_X, BAC_Y);
+
+        // Dessiner le four en bas au milieu
+        draw_sprite(page2_Level1, Oven_Piece, OVEN_X, OVEN_Y);
+
+        // Dessiner les morceaux de viande
+        for (int i = 0; i < MAX_MEAT; i++) {
+            if (meat[i].isCarried || meat[i].isDropped) {
+                if (meat[i].isCooked) {
+                    draw_sprite(page2_Level1, Cooked_Meat_Piece, meat[i].x, meat[i].y);
+                } else {
+                    draw_sprite(page2_Level1, Meat_Piece, meat[i].x, meat[i].y);
+                }
+            }
+        }
+
+        blit(page2_Level1, screen, 0, 0, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    }
+    rest(20);
+}
