@@ -1,0 +1,58 @@
+#include "game.h"
+
+void handle_collisions() {
+    for (int i = 0; i < num_zones_interdites; i++) {
+        Zone_Interdite zone = zones_interdites[i];
+
+        // Vérification de la zone interdite en x
+        if (player1.x1 + player1.width1 > zone.x && player1.x1 < zone.x + zone.width &&
+            player1.y1 + player1.height1 > zone.y && player1.y1 < zone.y + zone.height) {
+            if (player1.dx1 > 0) {
+                player1.x1 = zone.x - player1.width1;
+            } else {
+                player1.x1 = zone.x + zone.width;
+            }
+        }
+
+        // Vérification de la zone interdite en y
+        if (player1.y1 + player1.height1 > zone.y && player1.y1 < zone.y + zone.height &&
+            player1.x1 + player1.width1 > zone.x && player1.x1 < zone.x + zone.width) {
+            if (player1.dy1 > 0) {
+                player1.y1 = zone.y - player1.height1;
+            } else {
+                player1.y1 = zone.y + zone.height;
+            }
+        }
+    }
+
+    // Gestion de la collision avec player2
+    if (player1.x1 + player1.width1 > player2.x2 && player1.x1 < player2.x2 + player2.width2 && player1.y1 + player1.height1 > player2.y2 && player1.y1 < player2.y2 + player2.height2) {
+        if (player1.dx1 > 0) {
+            player1.x1 = player2.x2 - player1.width1;
+        } else {
+            player1.x1 = player2.x2 + player2.width2;
+        }
+
+        if (player1.dy1 > 0) {
+            player1.y1 = player2.y2 - player1.height1;
+        } else {
+            player1.y1 = player2.y2 + player2.height2;
+        }
+    }
+
+    // Gestion de la collision avec le four
+    if (player1.x1 + player1.width1 > OVEN_X && player1.x1 < OVEN_X + OVEN_WIDTH &&
+                                                             player1.y1 + player1.height1 > OVEN_Y && player1.y1 < OVEN_Y + OVEN_HEIGHT) {
+        if (player1.dx1 > 0) {
+            player1.x1 = OVEN_X - player1.width1;
+        } else {
+            player1.x1 = OVEN_X + OVEN_WIDTH;
+        }
+
+        if (player1.dy1 > 0) {
+            player1.y1 = OVEN_Y - player1.height1;
+        } else {
+            player1.y1 = OVEN_Y + OVEN_HEIGHT;
+        }
+    }
+}
