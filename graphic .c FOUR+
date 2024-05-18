@@ -1,0 +1,203 @@
+#include "game.h"
+
+BITMAP *page0_Start;
+BITMAP *page1_Menu;
+BITMAP *page1_Levels;
+BITMAP *page1_Credits;
+BITMAP *page1_Settings;
+BITMAP *page2_Level1;
+BITMAP *Oven_Piece;
+BITMAP *Bac_A_Viande;
+BITMAP *Meat_Piece;
+BITMAP *Cooked_Meat_Piece;  // Nouvelle image pour la viande cuite
+
+void lancerToutAllegro(int largeur, int hauteur) {
+    allegro_init();
+    install_keyboard();
+    install_mouse();
+
+    set_color_depth(32);
+    set_gfx_mode(GFX_AUTODETECT_WINDOWED, 800, 600, 0, 0);
+    show_mouse(screen); // Affiche pointeur de souris en mode allegro
+
+    page0_Start = create_bitmap(SCREEN_WIDTH, SCREEN_HEIGHT); // Page 0 Start
+    clear_bitmap(page0_Start);
+    page1_Menu = create_bitmap(SCREEN_WIDTH, SCREEN_HEIGHT); // Page 1 Menu
+    clear_bitmap(page1_Menu);
+    page1_Levels = create_bitmap(SCREEN_WIDTH, SCREEN_HEIGHT); // Page 1 Levels
+    clear_bitmap(page1_Levels);
+    page1_Credits = create_bitmap(SCREEN_WIDTH, SCREEN_HEIGHT); // Page 1 Credits
+    clear_bitmap(page1_Credits);
+    page1_Settings = create_bitmap(SCREEN_WIDTH, SCREEN_HEIGHT); // Page 1 Settings
+    clear_bitmap(page1_Settings);
+    page2_Level1 = create_bitmap(SCREEN_WIDTH, SCREEN_HEIGHT); // Page 2 Level1
+    clear_bitmap(page2_Level1);
+}
+
+void graphic_background_start() {
+    Background_Start = load_bitmap("Background_Start.bmp", NULL);
+    if (!Background_Start) {
+        allegro_message("Erreur de chargement de Background_Start");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+    rest(20);
+}
+
+void graphic_background_menu() {
+    Background_Menu = load_bitmap("Background_Menu.bmp", NULL);
+    if (!Background_Menu) {
+        allegro_message("Erreur de chargement de Background_Menu");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+    rest(20);
+}
+
+void graphic_levels() {
+    Background_Levels = load_bitmap("Background_Levels.bmp", NULL);
+    if (!Background_Levels) {
+        allegro_message("Erreur de chargement de Background_Levels");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+    rest(20);
+}
+
+void graphic_credits() {
+    Background_Credits = load_bitmap("Background_Credits.bmp", NULL);
+    if (!Background_Credits) {
+        allegro_message("Erreur de chargement de Background_Credits");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+    rest(20);
+}
+
+void graphic_settings() {
+    Background_Settings = load_bitmap("Background_Settings.bmp", NULL);
+    if (!Background_Settings) {
+        allegro_message("Erreur de chargement de Background_Settings");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+    rest(20);
+}
+
+void graphic_player1_skin() {
+    Player1_Skin = load_bitmap("Capture d'écran 2024-05-18 145919.bmp", NULL);
+    if (!Player1_Skin) {
+        allegro_message("Erreur de chargement de Player1_Skin");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+    rest(20);
+}
+
+void graphic_player2_skin() {
+    Player2_Skin = load_bitmap("Player2_Skin.bmp", NULL);
+    if (!Player2_Skin) {
+        allegro_message("Erreur de chargement de Player2_Skin");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+    rest(20);
+}
+
+void graphic_player3_skin() {
+    Player3_Skin = load_bitmap("Player3_Skin.bmp", NULL);
+    if (!Player3_Skin) {
+        allegro_message("Erreur de chargement de Player3_Skin");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+    rest(20);
+}
+
+void graphic_player4_skin() {
+    Player4_Skin = load_bitmap("Player4_Skin.bmp", NULL);
+    if (!Player4_Skin) {
+        allegro_message("Erreur de chargement de Player4_Skin");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+    rest(20);
+}
+
+void graphic_player5_skin() {
+    Player5_Skin = load_bitmap("Player5_Skin.bmp", NULL);
+    if (!Player5_Skin) {
+        allegro_message("Erreur de chargement de Player5_Skin");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+    rest(20);
+}
+
+void graphic_board_fond() {
+    Board_fond = load_bitmap("Board_fond.bmp", NULL);
+    if (!Board_fond) {
+        allegro_message("Erreur de chargement de Board_fond");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+    rest(20);
+}
+
+void graphic_meat_piece() {
+    Meat_Piece = load_bitmap("miniboutdeviande.bmp", NULL);
+    if (!Meat_Piece) {
+        allegro_message("Erreur de chargement de Meat_Piece");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+    rest(20);
+}
+
+void graphic_bac_a_viande() {
+    Bac_A_Viande = load_bitmap("Capture d'écran 2024-05-18 153720.bmp", NULL);
+    if (!Bac_A_Viande) {
+        allegro_message("Erreur de chargement de Bac_A_Viande");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+    rest(20);
+}
+
+void graphic_oven_piece() {
+    Oven_Piece = load_bitmap("Capture d'écran 2024-05-18 173341.bmp", NULL);
+    if (!Oven_Piece) {
+        allegro_message("Erreur de chargement de Oven_Piece");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+    rest(20);
+}
+
+void graphic_cooked_meat_piece() {
+    Cooked_Meat_Piece = load_bitmap("Capture d'écran 2024-05-18 174704.bmp", NULL);
+    if (!Cooked_Meat_Piece) {
+        allegro_message("Erreur de chargement de Cooked_Meat_Piece");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+    rest(20);
+}
+
+void cleanup_graphics() { // Fonction de nettoyage des ressources graphiques / Libération de la mémoire
+    destroy_bitmap(Background_Start);
+    destroy_bitmap(Background_Menu);
+    destroy_bitmap(Background_Levels);
+    destroy_bitmap(Background_Credits);
+    destroy_bitmap(Background_Settings);
+    destroy_bitmap(Player1_Skin);
+    destroy_bitmap(Player2_Skin);
+    destroy_bitmap(Player3_Skin);
+    destroy_bitmap(Player4_Skin);
+    destroy_bitmap(Player5_Skin);
+    destroy_bitmap(Board_fond);
+    destroy_bitmap(Meat_Piece);
+    destroy_bitmap(Bac_A_Viande);
+    destroy_bitmap(Oven_Piece);
+    destroy_bitmap(Cooked_Meat_Piece); // Libération de la mémoire pour l'image de viande cuite
+}
