@@ -1,0 +1,157 @@
+#ifndef ING1_2023_2024_GROUPE13_EQUIPE3_GAME_H
+#define ING1_2023_2024_GROUPE13_EQUIPE3_GAME_H
+
+#define BAC_WIDTH 65  // Largeur du bac à viande
+#define BAC_HEIGHT 70 // Hauteur du bac à viande
+#define BAC_MARGIN 20  // Marge pour que l'image ne touche pas les bords
+#define BAC_COLLISION_MARGIN 30  // Marge de sécurité pour les collisions
+#define BAC_COLLISION_TOP_MARGIN 40  // Marge de sécurité pour le haut du bloc
+#define BAC_X (SCREEN_WIDTH - BAC_WIDTH - BAC_MARGIN)
+#define BAC_Y (SCREEN_HEIGHT - BAC_HEIGHT - BAC_MARGIN)
+#define OVEN_WIDTH 65  // Largeur du four
+#define OVEN_HEIGHT 70 // Hauteur du four
+#define OVEN_X ((SCREEN_WIDTH / 2) - (OVEN_WIDTH / 2)) // Position X pour centrer horizontalement
+#define OVEN_Y (SCREEN_HEIGHT - OVEN_HEIGHT - 20) // Position Y en bas avec une marge
+
+//Bibliothèque
+#define MAX_MEAT 10  // Maximum de morceaux de viande
+
+#include <allegro.h>
+#include <stdio.h>
+#define PLAYER_WIDTH 50  // Mettre à jour avec la nouvelle largeur du personnage
+#define PLAYER_HEIGHT 50 // Mettre à jour avec la nouvelle hauteur du personnage
+#define GRID_WIDTH 20
+#define GRID_HEIGHT 12
+#define GRID_SIZE 40
+#define SCREEN_WIDTH 800
+#define SCREEN_HEIGHT 600
+#define PLAYER_SIZE 25
+#define PLAYER_SPEED 1
+extern BITMAP *Meat_Piece;
+extern BITMAP *Bac_A_Viande;
+extern BITMAP *Oven_Piece;
+extern BITMAP *Cooked_Meat_Piece;
+void graphic_meat_piece();
+void graphic_bac_a_viande();
+void graphic_oven_piece();
+void graphic_cooked_meat_piece();
+BITMAP *Background_Start;
+BITMAP *Background_Menu;
+BITMAP *Background_Levels;
+BITMAP *Background_Credits;
+BITMAP *Background_Settings;
+BITMAP *Player1_Skin;
+BITMAP *Player2_Skin;
+BITMAP *Player3_Skin;
+BITMAP *Player4_Skin;
+BITMAP *Player5_Skin;
+BITMAP *Board_fond;
+
+extern BITMAP *page0_Start;
+extern BITMAP *page1_Menu;
+extern BITMAP *page1_Levels;
+extern BITMAP *page1_Credits;
+extern BITMAP *page1_Settings;
+extern BITMAP *page2_Level1;
+
+/////   STRUCTURE   //////
+
+// Structure de la viande
+
+typedef struct {
+    int x, y;
+    int width, height;
+    int isCarried;
+    int isDropped;
+    int isCooked;
+} Meat;
+
+extern Meat meat[MAX_MEAT];
+extern int meatCarried;
+extern int meatDropped;
+extern int currentMeatIndex;
+
+
+// Structures des joueurs
+typedef struct {
+    int x1, y1;
+    int width1, height1;
+    int dx1, dy1;
+    int hasBlock1;
+    int blockIndex1;
+} Player1;
+extern Player1 player1;
+
+typedef struct {
+    int x2, y2;
+    int width2, height2;
+    int dx2, dy2;
+    int hasBlock2;
+    int blockIndex2;
+} Player2;
+extern Player2 player2;
+
+// Structure des blocs
+typedef struct {
+    int x, y;
+    int width, height;
+    int isCarried;
+    int color;
+} Block;
+
+#define MAX_BLOCKS 100
+extern Block blocks[MAX_BLOCKS];
+extern int numBlocks;
+
+// Structure des zones interdites
+typedef struct {
+    int x, y;
+    int width, height;
+} Zone_Interdite;
+
+#define MAX_ZONES_INTERDITES 100
+extern Zone_Interdite zones_interdites[MAX_ZONES_INTERDITES];
+extern int num_zones_interdites;
+
+// Déclarations des fonctions principales
+
+// Main.c //
+void initialize_game();
+void game_loop();
+void cleanup();
+
+// Input.c //
+void input();
+
+// Graphic.c //
+void lancerToutAllegro(int largeur, int hauteur);
+void graphic_background_start();
+void graphic_background_menu();
+void graphic_levels();
+void graphic_credits();
+void graphic_settings();
+void graphic_player1_skin();
+void graphic_player2_skin();
+void graphic_player3_skin();
+void graphic_player4_skin();
+void graphic_player5_skin();
+void cleanup_graphics();
+
+// draw_game_menu_scene.c //
+void draw_Page0_start_menu();
+void draw_game_menu_scene();
+void draw_game_level1_scene();
+
+// level1.c //
+void graphic_board_fond();
+
+// Collision.c //
+void handle_collisions();
+
+// zone_interdite.c //
+void initialize_Zone_Interdites_level1();
+
+// Objet.c //
+void initialize_blocks();
+
+#endif //ING1_2023_2024_GROUPE13_EQUIPE3_GAME_H
